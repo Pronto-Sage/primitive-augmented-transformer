@@ -1,6 +1,6 @@
 # Reproducibility
 
-This package keeps code, configs, fixtures, manuscript source, and compact result summaries in git. Large checkpoints, converted datasets, tokenizer caches, and raw training artifacts are intentionally excluded.
+This package keeps code, configs, fixtures, manuscript source, and compact result summaries in git. Large checkpoints, converted datasets, tokenizer caches, and raw training artifacts are intentionally excluded. Usable warm-start/interface model artifacts are hosted at `https://huggingface.co/nur-dev/primitive-augmented-transformer`.
 
 ## External Data
 
@@ -73,4 +73,3 @@ python scripts/eval_product.py --checkpoint <checkpoint> --prompts artifacts/dat
 ```
 
 Compact published result summaries are in `results/`.
-

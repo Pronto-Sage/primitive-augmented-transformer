@@ -33,7 +33,9 @@ python -m compileall -q scripts src
 
 See [`docs/reproducibility.md`](docs/reproducibility.md). External datasets are not redistributed here; use the cited upstream datasets and the conversion scripts in `scripts/`.
 
+Model artifacts for the usable warm-start/interface model are hosted at:
+`https://huggingface.co/nur-dev/primitive-augmented-transformer`.
+
 ## Paper
 
 The current article package is in [`paper/mdpi_pat_er/main.tex`](paper/mdpi_pat_er/main.tex). A compiled PDF is included at [`paper/mdpi_pat_er/main.pdf`](paper/mdpi_pat_er/main.pdf).
-
