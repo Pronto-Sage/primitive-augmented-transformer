@@ -1,0 +1,6 @@
+stage,claim,key_metric,value,notes
+Stage_3,frozen_backbone_register_training,primitive_macro_f1,0.884,side-state learns on frozen Qwen3 backbone
+Stage_4,safe_register_only_injection,lm_delta,-0.016,KL-bounded injection
+Stage_5A,upper_adapter_opening,upper_layer_adapter_growth,50-65x,layers 21-27 adapt; lower layers unchanged
+Stage_5B,top_2_backbone_adaptation,kl_guard_max,0.137,top layers adapt while KL guard stays below threshold
+

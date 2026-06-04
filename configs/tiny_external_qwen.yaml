@@ -1,0 +1,32 @@
+# Tiny PAT-ER config for the production-tokenizer + long-context migration.
+# Same tiny dims as tiny_external (hidden 64 / 3 layers), but the vocab comes
+# from the PAT-ER-extended Qwen3-0.6B tokenizer and the context is 1024.
+# vocab_size is the extended-tokenizer size (151782); the train path also sets
+# config.vocab_size = max(config.vocab_size, tokenizer.vocab_size) so this stays
+# correct if the tokenizer is rebuilt. pad/eos are Qwen's; Qwen has no BOS, so
+# bos_token_id reuses endoftext (encode uses add_special_tokens=False, so the
+# value is cosmetic and never prepended).
+vocab_size: 151782
+hidden_size: 64
+intermediate_size: 176
+num_hidden_layers: 3
+num_attention_heads: 4
+num_key_value_heads: 2
+max_position_embeddings: 1024
+rope_theta: 10000.0
+rms_norm_eps: 1.0e-5
+num_event_registers: 4
+num_argument_registers: 6
+num_primitive_registers: 14
+num_proto_role_properties: 17
+cross_attention_every_n_layers: 1
+adapter_rank: 8
+use_event_stream: true
+use_primitive_stream: true
+use_role_primitive_ffn: true
+num_ffn_adapters: 6
+pressure_rank: 0
+tie_word_embeddings: true
+bos_token_id: 151643
+eos_token_id: 151645
+pad_token_id: 151643

@@ -1,0 +1,57 @@
+\section{Results}
+\label{sec:results}
+
+\subsection{Journal-Facing Result Summary}
+
+The most important result is the B/C architecture matrix. Adding PAT-ER
+registers to the same pretrained backbone improves primitive macro-F1 by 0.209
+and role-to-primitive macro-F1 by 0.090 across eight seeds. Both confidence
+intervals exclude zero, and LM loss is unchanged.
+
+\input{figures/F2_contribution_matrix}
+\input{tables/T3_architecture_matrix}
+
+\subsection{Warm-Started Usable Model}
+
+Condition C proves the architecture. Condition D is the usable model: it
+retains much of the side-state behavior while reducing LM loss from 2.555 to
+1.344. The warm-start sequence was not a single lucky tuning run. It required
+four validated stages: frozen-backbone register learning, safe register-only
+injection, upper-layer adapter opening, and KL-guarded top-layer adaptation.
+
+\input{figures/F3_warmstart_stages}
+\input{tables/T4_warmstart_stages}
+
+\subsection{Decoupled Product Interface}
+
+The first shared-layer interface SFT improved tool calls but damaged the
+role-to-primitive bridge by 0.094. The accepted solution decouples product
+generation from side-state measurement: train copied top decoder blocks only in
+\texttt{interface\_mode}; keep base mode byte-identical to Condition D.
+
+\input{figures/F4_interface_metrics}
+\input{tables/T5_interface_eval}
+
+On 242 held-out prompts across three seeds, the decoupled interface reaches
+Hermes parse 0.952, exact argument correctness 0.981, JSON validity 1.000, and
+IDK F1 1.000. Exact unseen tool-name copying remains imperfect at 0.886. This is
+reported as an interface limit, not as a side-state regression, because base
+mode is identical to Condition D.
+
+\subsection{Negative Results}
+
+The negative result record is central to the claim because it shows that the
+reported path is not merely the last surviving configuration. Several plausible
+alternatives failed for diagnosed reasons.
+
+\input{figures/F5_negative_results_map}
+\input{tables/T6_negative_results}
+
+The pattern is consistent. Synthetic substitutes for real external data hurt
+the real external slice. Explicit-conflict NLI helps its own surface
+contradiction but hurts ProofWriter contradiction. Fact-level pointer heads do
+not help at the available refutation density. Aux-refresh on the adapted
+backbone causes class forgetting. Shared-layer SFT improves output formatting
+but damages the bridge. The accepted recipe avoids these failure modes by
+keeping architecture measurement and product generation decoupled.
+

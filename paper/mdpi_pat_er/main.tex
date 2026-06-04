@@ -1,0 +1,78 @@
+% =============================================================================
+% PAT-ER MDPI Article Package
+%
+% Build:
+%   pdflatex main.tex
+%   bibtex main
+%   pdflatex main.tex
+%   pdflatex main.tex
+%
+% Primary target: Machine Learning and Knowledge Extraction (MAKE).
+% To retarget, change the first documentclass option (e.g., make -> bdcc).
+% =============================================================================
+
+\documentclass[make,article,submit,pdftex,moreauthors]{Definitions/mdpi}
+
+\firstpage{1}
+\makeatletter
+\setcounter{page}{\@firstpage}
+\makeatother
+\pubvolume{1}
+\issuenum{1}
+\articlenumber{0}
+\pubyear{2026}
+\copyrightyear{2026}
+\datereceived{}
+\daterevised{}
+\dateaccepted{}
+\datepublished{}
+\doinum{}
+
+\usepackage{mathtools}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{placeins}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, calc, fit}
+
+\def\UrlBreaks{\do\/\do-\do.\do_\do?\do\&\do\=\do\a\do\b\do\c\do\d\do\e%
+  \do\f\do\g\do\h\do\i\do\j\do\k\do\l\do\m\do\n\do\o\do\p\do\q\do\r%
+  \do\s\do\t\do\u\do\v\do\w\do\x\do\y\do\z\do\A\do\B\do\C\do\D\do\E%
+  \do\F\do\G\do\H\do\I\do\J\do\K\do\L\do\M\do\N\do\O\do\P\do\Q\do\R%
+  \do\S\do\T\do\U\do\V\do\W\do\X\do\Y\do\Z}
+
+\newcommand{\PATER}{PAT-ER}
+\newcommand{\Qwen}{Qwen3-0.6B}
+\newcommand{\RtwoP}{role-to-primitive}
+\newcommand{\LM}{\mathcal{L}_{\mathrm{LM}}}
+\newcommand{\Laux}{\mathcal{L}_{\mathrm{aux}}}
+\newcommand{\Lspan}{\mathcal{L}_{\mathrm{span}}}
+\newcommand{\Liface}{\mathcal{L}_{\mathrm{iface}}}
+\newcommand{\LKL}{\mathcal{L}_{\mathrm{KL}}}
+\newcommand{\stopgrad}{\operatorname{sg}}
+\newcommand{\Attn}{\operatorname{Attn}}
+\newcommand{\LN}{\operatorname{LN}}
+\newcommand{\softmax}{\operatorname{softmax}}
+\newcommand{\concat}{\mathbin{\Vert}}
+
+\input{sections/00_metadata}
+\input{sections/01_abstract_keywords}
+
+\begin{document}
+
+\input{sections/02_introduction}
+\input{sections/03_related_work}
+\input{sections/04_architecture}
+\input{sections/05_materials_methods}
+\input{sections/06_results}
+\input{sections/07_discussion}
+\input{sections/08_limitations}
+\input{sections/09_conclusions}
+\input{sections/10_backmatter}
+
+\FloatBarrier
+\reftitle{References}
+\bibliography{refs}
+
+\end{document}

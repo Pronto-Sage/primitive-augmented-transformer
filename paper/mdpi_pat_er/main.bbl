@@ -1,0 +1,151 @@
+\begin{thebibliography}{999}
+
+\bibitem[Vaswani et~al.(2017)Vaswani, Shazeer, Parmar, Uszkoreit, Jones, Gomez,
+  Kaiser, and Polosukhin]{vaswani2017attention}
+Vaswani, A.; Shazeer, N.; Parmar, N.; Uszkoreit, J.; Jones, L.; Gomez, A.N.;
+  Kaiser, L.; Polosukhin, I.
+\newblock Attention Is All You Need.
+\newblock In Proceedings of the Advances in Neural Information Processing
+  Systems 30,  2017, pp. 5998--6008.
+
+\bibitem[Brown et~al.(2020)Brown, Mann, Ryder, Subbiah, Kaplan, Dhariwal,
+  Neelakantan, Shyam, Sastry, Askell, et~al.]{brown2020language}
+Brown, T.B.; Mann, B.; Ryder, N.; Subbiah, M.; Kaplan, J.; Dhariwal, P.;
+  Neelakantan, A.; Shyam, P.; Sastry, G.; Askell, A.;  et~al.
+\newblock Language Models are Few-Shot Learners.
+\newblock In Proceedings of the Advances in Neural Information Processing
+  Systems 33,  2020, pp. 1877--1901.
+
+\bibitem[Dowty(1991)]{dowty1991proto}
+Dowty, D.R.
+\newblock Thematic Proto-Roles and Argument Selection.
+\newblock {\em Language} {\bf 1991}, {\em 67},~547--619.
+
+\bibitem[Palmer et~al.(2005)Palmer, Gildea, and Kingsbury]{palmer2005propbank}
+Palmer, M.; Gildea, D.; Kingsbury, P.
+\newblock The Proposition Bank: An Annotated Corpus of Semantic Roles.
+\newblock {\em Computational Linguistics} {\bf 2005}, {\em 31},~71--106.
+\newblock {\url{https://doi.org/10.1162/0891201053630264}}.
+
+\bibitem[Baker et~al.(1998)Baker, Fillmore, and Lowe]{baker1998framenet}
+Baker, C.F.; Fillmore, C.J.; Lowe, J.B.
+\newblock The {Berkeley} {FrameNet} Project.
+\newblock In Proceedings of the Proceedings of the 36th Annual Meeting of the
+  Association for Computational Linguistics and 17th International Conference
+  on Computational Linguistics,  1998, pp. 86--90.
+\newblock {\url{https://doi.org/10.3115/980845.980860}}.
+
+\bibitem[Tafjord et~al.(2021)Tafjord, Dalvi, and Clark]{tafjord2021proofwriter}
+Tafjord, O.; Dalvi, B.; Clark, P.
+\newblock {ProofWriter}: Generating Implications, Proofs, and Abductive
+  Statements over Natural Language.
+\newblock In Proceedings of the Findings of the Association for Computational
+  Linguistics: ACL-IJCNLP 2021. Association for Computational Linguistics,
+  2021, pp. 3621--3634.
+\newblock {\url{https://doi.org/10.18653/v1/2021.findings-acl.317}}.
+
+\bibitem[Han et~al.(2024)Han, Schoelkopf, Zhao, Qi, Riddell, Zhou, Coady, Peng,
+  Qiao, Benson, Sun, Wardle-Solano, Szabo, Zubova, Burtell, Fan, Liu, Wong,
+  Sailor, Ni, Nan, Kasai, Yu, Zhang, Fabbri, Kryscinski, Yavuz, Liu, Lin, Joty,
+  Zhou, Xiong, Ying, Cohan, and Radev]{han2024folio}
+Han, S.; Schoelkopf, H.; Zhao, Y.; Qi, Z.; Riddell, M.; Zhou, W.; Coady, J.;
+  Peng, D.; Qiao, Y.; Benson, L.;  et~al.
+\newblock {FOLIO}: Natural Language Reasoning with First-Order Logic.
+\newblock In Proceedings of the Proceedings of the 2024 Conference on Empirical
+  Methods in Natural Language Processing. Association for Computational
+  Linguistics,  2024, pp. 22017--22031.
+\newblock {\url{https://doi.org/10.18653/v1/2024.emnlp-main.1229}}.
+
+\bibitem[Dehal et~al.(2025)Dehal, Sharma, and Rajabi]{dehal2025kgllm}
+Dehal, R.S.; Sharma, M.; Rajabi, E.
+\newblock Knowledge Graphs and Their Reciprocal Relationship with Large
+  Language Models.
+\newblock {\em Machine Learning and Knowledge Extraction} {\bf 2025}, {\em
+  7},~38.
+\newblock {\url{https://doi.org/10.3390/make7020038}}.
+
+\bibitem[Liang et~al.(2025)Liang, Wang, and Tong]{liang2025neurosymbolic}
+Liang, B.; Wang, Y.; Tong, C.
+\newblock AI Reasoning in Deep Learning Era: From Symbolic AI to
+  Neural--Symbolic AI.
+\newblock {\em Mathematics} {\bf 2025}, {\em 13},~1707.
+\newblock {\url{https://doi.org/10.3390/math13111707}}.
+
+\bibitem[Devlin et~al.(2019)Devlin, Chang, Lee, and Toutanova]{devlin2019bert}
+Devlin, J.; Chang, M.W.; Lee, K.; Toutanova, K.
+\newblock {BERT}: Pre-training of Deep Bidirectional Transformers for Language
+  Understanding.
+\newblock In Proceedings of the Proceedings of the 2019 Conference of the North
+  American Chapter of the Association for Computational Linguistics: Human
+  Language Technologies. Association for Computational Linguistics,  2019, pp.
+  4171--4186.
+\newblock {\url{https://doi.org/10.18653/v1/N19-1423}}.
+
+\bibitem[Hu et~al.(2022)Hu, Shen, Wallis, Allen-Zhu, Li, Wang, Wang, and
+  Chen]{hu2022lora}
+Hu, E.J.; Shen, Y.; Wallis, P.; Allen-Zhu, Z.; Li, Y.; Wang, S.; Wang, L.;
+  Chen, W.
+\newblock {LoRA}: Low-Rank Adaptation of Large Language Models.
+\newblock In Proceedings of the International Conference on Learning
+  Representations,  2022.
+
+\bibitem[Bowman et~al.(2015)Bowman, Angeli, Potts, and Manning]{bowman2015snli}
+Bowman, S.R.; Angeli, G.; Potts, C.; Manning, C.D.
+\newblock A Large Annotated Corpus for Learning Natural Language Inference.
+\newblock In Proceedings of the Proceedings of the 2015 Conference on Empirical
+  Methods in Natural Language Processing. Association for Computational
+  Linguistics,  2015, pp. 632--642.
+\newblock {\url{https://doi.org/10.18653/v1/D15-1075}}.
+
+\bibitem[Thorne et~al.(2018)Thorne, Vlachos, Christodoulopoulos, and
+  Mittal]{thorne2018fever}
+Thorne, J.; Vlachos, A.; Christodoulopoulos, C.; Mittal, A.
+\newblock {FEVER}: A Large-scale Dataset for Fact Extraction and
+  {VER}ification.
+\newblock In Proceedings of the Proceedings of the 2018 Conference of the North
+  American Chapter of the Association for Computational Linguistics: Human
+  Language Technologies. Association for Computational Linguistics,  2018, pp.
+  809--819.
+\newblock {\url{https://doi.org/10.18653/v1/N18-1074}}.
+
+\bibitem[Ivanisenko et~al.(2024)Ivanisenko, Demenkov, and
+  Ivanisenko]{ivanisenko2024knowledgeextraction}
+Ivanisenko, T.V.; Demenkov, P.S.; Ivanisenko, V.A.
+\newblock An Accurate and Efficient Approach to Knowledge Extraction from
+  Scientific Publications Using Structured Ontology Models, Graph Neural
+  Networks, and Large Language Models.
+\newblock {\em International Journal of Molecular Sciences} {\bf 2024}, {\em
+  25},~11811.
+\newblock {\url{https://doi.org/10.3390/ijms252111811}}.
+
+\bibitem[Tian and Meng(2024)]{tian2024pdec}
+Tian, X.; Meng, Y.
+\newblock {PDEC}: A Framework for Improving Knowledge Graph Reasoning
+  Performance through Predicate Decomposition.
+\newblock {\em Algorithms} {\bf 2024}, {\em 17},~129.
+\newblock {\url{https://doi.org/10.3390/a17030129}}.
+
+\bibitem[Scarselli et~al.(2009)Scarselli, Gori, Tsoi, Hagenbuchner, and
+  Monfardini]{scarselli2009gnn}
+Scarselli, F.; Gori, M.; Tsoi, A.C.; Hagenbuchner, M.; Monfardini, G.
+\newblock The Graph Neural Network Model.
+\newblock {\em IEEE Transactions on Neural Networks} {\bf 2009}, {\em
+  20},~61--80.
+\newblock {\url{https://doi.org/10.1109/TNN.2008.2005605}}.
+
+\bibitem[Schick et~al.(2023)Schick, Dwivedi-Yu, Dessi, Raileanu, Lomeli,
+  Hambro, Zettlemoyer, Cancedda, and Scialom]{schick2023toolformer}
+Schick, T.; Dwivedi-Yu, J.; Dessi, R.; Raileanu, R.; Lomeli, M.; Hambro, E.;
+  Zettlemoyer, L.; Cancedda, N.; Scialom, T.
+\newblock Toolformer: Language Models Can Teach Themselves to Use Tools.
+\newblock In Proceedings of the Advances in Neural Information Processing
+  Systems 36,  2023.
+
+\bibitem[Yao et~al.(2023)Yao, Zhao, Yu, Du, Shafran, Narasimhan, and
+  Cao]{yao2023react}
+Yao, S.; Zhao, J.; Yu, D.; Du, N.; Shafran, I.; Narasimhan, K.; Cao, Y.
+\newblock {ReAct}: Synergizing Reasoning and Acting in Language Models.
+\newblock In Proceedings of the International Conference on Learning
+  Representations,  2023.
+
+\end{thebibliography}

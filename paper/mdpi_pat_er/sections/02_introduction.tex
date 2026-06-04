@@ -1,0 +1,84 @@
+\section{Introduction}
+\label{sec:introduction}
+
+Transformer decoders \citep{vaswani2017attention,brown2020language} provide a
+powerful token-level substrate for language modeling, but their intermediate
+semantic organization is normally implicit. This is a practical problem when a
+model is expected to distinguish proof from refutation, abduction from
+deduction, evidence from unsupported assertion, and a safe answer from a
+necessary abstention. These distinctions are not merely output labels. They are
+semantic operations that structure the answer.
+
+This paper asks whether logical primitives can be treated as \emph{semantic
+heads}: fixed, named latent channels that answer characteristic questions. For
+example, implication and modus ponens ask ``from what does this follow?'';
+abduction asks ``what hypothesis would explain the observation?''; contradiction
+asks ``what conflicts with this?''; unknown or IDK asks ``what is missing before
+answering?''. The core hypothesis is architectural: if these primitives are
+represented by a side-state rather than only by pooled token labels, a decoder
+should learn more stable mappings between event roles, primitive class, and
+output behavior.
+
+\PATER{} (Primitive-Augmented Transformer with Event-Role Stream) implements
+this hypothesis with three interacting streams:
+
+\begin{enumerate}
+  \item a standard causal token stream;
+  \item an event-role stream that stores event and argument registers; and
+  \item a primitive stream that stores semantic primitive registers.
+\end{enumerate}
+
+The event-role stream is grounded in linguistic work on semantic roles and
+argument structure \citep{dowty1991proto,palmer2005propbank,baker1998framenet}.
+The primitive stream is grounded in the use of formal reasoning labels and
+proof/refutation metadata in logical NLP datasets such as ProofWriter
+\citep{tafjord2021proofwriter} and FOLIO \citep{han2024folio}. The point is not
+to turn a language model into a proof engine. The point is to expose a fixed
+semantic flow that can be ablated, measured, and used.
+This places PAT-ER inside the broader hybrid-reasoning agenda surveyed in recent
+MDPI work on LLM--knowledge-graph integration and neural--symbolic reasoning
+\citep{dehal2025kgllm,liang2025neurosymbolic}, but with a narrower architectural
+claim: the structured state is inside the decoder rather than supplied only as
+an external graph, retrieved context, or post-hoc explanation.
+
+The experimental record supports three bounded claims. First, the register
+architecture matters: on the same \Qwen{} backbone and same data, PAT-ER
+registers outperform token-pooled auxiliary heads across eight seeds. Second,
+the side-state can be attached to a pretrained decoder without destroying
+language-model behavior, provided the injection path is register-only,
+detached, and trained at a calibrated injection learning rate. Third, product
+format generation can be separated from side-state measurement by a mode-gated
+interface path: base mode preserves the side-state exactly, while
+\texttt{interface\_mode} learns schema-grounded tool calls and JSON output.
+
+The paper is also intentionally negative where the evidence is negative. Several
+plausible paths failed: synthetic external-style augmentation hurt the real
+external slice; explicit-conflict NLI hurt ProofWriter contradiction; token and
+evidence-item fact heads failed at the available data scale; aux-refresh after
+warm-start caused class forgetting; and shared-layer interface SFT improved tool
+calls but damaged the role-to-primitive bridge. These failures are not hidden.
+They are part of the method: audit, run a bounded gate, document pass and fail,
+and freeze only after a pass.
+
+\input{figures/F1_architecture_streams}
+
+\subsection{Contributions}
+\label{subsec:contributions}
+
+This article contributes:
+
+\begin{itemize}
+  \item A semantic-head framing of logical primitives as fixed answer-structuring
+  questions, implemented as a primitive side-state coupled to event-role
+  registers.
+  \item A decoder architecture with explicit event-role and primitive streams,
+  including formulas for token/register updates, warm-start-safe injection, and
+  set-valued span supervision.
+  \item An eight-seed architecture matrix showing that PAT-ER registers improve
+  primitive macro-F1 and role-to-primitive macro-F1 over token-pooled auxiliary
+  heads on the same pretrained backbone.
+  \item A warm-start procedure that preserves pretrained language behavior while
+  allowing measured side-state modulation.
+  \item A decoupled interface mode that produces schema-grounded tool calls and
+  JSON at zero measured cost to the base-mode side-state.
+\end{itemize}

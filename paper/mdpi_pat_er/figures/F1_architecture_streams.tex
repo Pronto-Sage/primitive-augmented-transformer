@@ -1,0 +1,35 @@
+\begin{figure}[H]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+  font=\small,
+  >=Latex,
+  stream/.style={draw, rounded corners=2pt, minimum width=34mm, minimum height=9mm, align=center, fill=blue!6},
+  reg/.style={draw, rounded corners=2pt, minimum width=34mm, minimum height=9mm, align=center, fill=orange!14},
+  head/.style={draw, rounded corners=2pt, minimum width=30mm, minimum height=8mm, align=center, fill=green!10},
+  arr/.style={->, line width=0.8pt}
+]
+\node[stream] (tok) {Token stream\\causal GQA};
+\node[reg, below=10mm of tok] (event) {Event-role stream\\event/argument registers};
+\node[reg, below=10mm of event] (prim) {Primitive stream\\semantic primitive registers};
+\node[head, right=22mm of event] (heads) {Auxiliary heads\\primitive, r2p, support, IDK};
+\node[head, right=22mm of tok] (lm) {LM head\\next token};
+\node[head, right=22mm of prim] (iface) {Interface mode\\tool / JSON / answer};
+
+\draw[arr] (tok) -- node[above]{read/write} (lm);
+\draw[arr] (tok) -- node[left]{read} (event);
+\draw[arr] (event) -- node[left]{ground roles} (prim);
+\draw[arr] (event) -- (heads);
+\draw[arr] (prim) -- (heads);
+\draw[arr] (prim) -- (iface);
+\draw[arr, dashed] (event.east) -- (iface.west);
+\draw[arr, dashed] (tok.east) -- (iface.west);
+
+\node[draw, dashed, rounded corners=2pt, fit=(tok)(event)(prim), inner sep=4mm,
+      label={[font=\small]above:PAT-ER base-mode semantic flow}] {};
+\end{tikzpicture}%
+}
+\caption{PAT-ER contains a normal token stream plus event-role and primitive side-state streams. The architecture claim is evaluated in base mode. Product-format generation is handled separately by the decoupled interface path.}
+\label{fig:architecture_streams}
+\end{figure}
+

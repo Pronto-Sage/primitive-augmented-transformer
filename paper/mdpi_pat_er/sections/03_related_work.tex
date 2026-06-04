@@ -1,0 +1,83 @@
+\section{Related Work}
+\label{sec:related}
+
+\subsection{Transformers and Pretrained Language Models}
+
+The Transformer architecture \citep{vaswani2017attention} replaced recurrent
+sequence processing with attention over token states and remains the dominant
+substrate for pretrained language models. BERT \citep{devlin2019bert} showed
+the effectiveness of large-scale bidirectional pretraining for language
+understanding, while GPT-style autoregressive language models demonstrated
+few-shot behavior at scale \citep{brown2020language}. Parameter-efficient
+adaptation methods such as LoRA \citep{hu2022lora} show that pretrained models
+can often be modified without updating all backbone parameters.
+
+PAT-ER builds on this pretrained-decoder substrate but does not treat the
+decoder state as the only semantic carrier. Its central comparison is therefore
+not ``pretrained versus not pretrained'', but ``token-pooled labels versus
+side-state registers on the same pretrained backbone''.
+
+\subsection{Semantic Roles and Event Structure}
+
+Semantic-role theory studies how predicates structure their arguments. Dowty's
+proto-role analysis \citep{dowty1991proto} argues that roles such as agent and
+patient are better understood through clusters of entailments than through a
+small rigid inventory. PropBank \citep{palmer2005propbank} and FrameNet
+\citep{baker1998framenet} operationalized predicate-argument annotation for
+computational NLP. These resources motivate the event-role side of PAT-ER: the
+model should not only classify a primitive but also bind it to the event and
+argument roles that license it.
+
+\subsection{Logical Reasoning Benchmarks}
+
+Natural-language reasoning datasets provide structured labels for entailment,
+contradiction, and uncertainty. SNLI \citep{bowman2015snli} introduced a large
+NLI benchmark with entailment, contradiction, and neutral labels. FEVER
+\citep{thorne2018fever} framed fact verification as claim evaluation against
+evidence. ProofWriter \citep{tafjord2021proofwriter} is closer to the present
+work because it includes proofs, implications, and abductive statements over
+templated natural language. FOLIO \citep{han2024folio} provides natural-language
+premises with first-order logic annotations and verified reasoning labels.
+
+PAT-ER uses these sources not to copy chain-of-thought into the input, but to
+derive supervised side-state targets: primitive class, support state, rule
+depth, entailment/refutation status, evidence pointers, and role-to-primitive
+bridges. The no-chain-of-thought constraint is important: proof metadata is used
+as supervision, not as rendered reasoning text.
+
+\subsection{Hybrid Knowledge Extraction and Neural--Symbolic Reasoning}
+
+Recent MDPI literature frames LLM reasoning as part of a wider effort to combine
+statistical language models with structured knowledge. Dehal et al.
+\citep{dehal2025kgllm} survey the reciprocal relationship between LLMs and
+knowledge graphs, emphasizing that structured representations can improve
+transparency, factual consistency, and reliability while LLMs automate entity,
+relation, and schema extraction. Ivanisenko et al.
+\citep{ivanisenko2024knowledgeextraction} demonstrate a domain-specific hybrid
+pipeline in which ontology models, graph neural networks, and fine-tuned LLMs
+are combined for scientific knowledge extraction. Liang et al.
+\citep{liang2025neurosymbolic} review neural--symbolic reasoning architectures
+and identify symbolic--continuous alignment, dynamic rule learning, and unified
+architectures as open problems.
+
+PAT-ER is aligned with this direction but takes a different design point. Rather
+than attach a separate knowledge graph to a frozen text generator, it introduces
+small event-role and primitive registers as first-class latent state inside the
+decoder. The predicate-decomposition result of Tian and Meng
+\citep{tian2024pdec} is especially relevant: it shows that predicate granularity
+and predicate polysemy matter for interpretable knowledge-graph reasoning. PAT-ER
+applies a related principle to language-model internals: logical primitives are
+treated as a fixed predicate-like inventory whose semantic distinctions can be
+learned, ablated, and measured.
+
+\subsection{Structured Neural State and Tool Use}
+
+Structured neural computation has a long history, from graph neural networks
+\citep{scarselli2009gnn} to neural modules that impose explicit intermediate
+structure. Tool-use work such as Toolformer \citep{schick2023toolformer} and
+ReAct \citep{yao2023react} shows the value of coupling language models to
+external actions. PAT-ER differs in two ways. First, the side-state is designed
+around semantic primitive flow rather than around textual reasoning traces.
+Second, the tool interface is decoupled from the architecture evaluation path:
+base mode measures side-state, while \texttt{interface\_mode} handles
+schema-grounded generation.

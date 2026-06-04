@@ -1,0 +1,29 @@
+\begin{figure}[H]
+\centering
+\resizebox{0.95\textwidth}{!}{%
+\begin{tikzpicture}[font=\small, >=Latex]
+  \draw[->] (0,0) -- (10.8,0) node[right]{metric};
+  \draw[->] (0,0) -- (0,5.2) node[above]{score};
+  \foreach \y/\lab in {0/0.0,1/0.2,2/0.4,3/0.6,4/0.8,5/1.0}
+    {\draw (-0.08,\y) -- (0.08,\y) node[left=4pt]{\lab};}
+
+  % scale: score * 5
+  \foreach \x/\name/\b/\c in {
+    1.0/Primitive F1/3.41/4.46,
+    4.0/r2p F1/4.08/4.53,
+    7.0/Contradiction/1.21/3.68
+  }{
+    \draw[fill=gray!35] (\x,0) rectangle ++(0.55,\b);
+    \draw[fill=blue!55] (\x+0.7,0) rectangle ++(0.55,\c);
+    \node[rotate=20, anchor=east] at (\x+1.25,-0.25) {\name};
+  }
+  \node[fill=gray!35, draw, minimum width=5mm] at (8.9,4.75) {};
+  \node[right] at (9.25,4.75) {B: Qwen + labels};
+  \node[fill=blue!55, draw, minimum width=5mm] at (8.9,4.35) {};
+  \node[right] at (9.25,4.35) {C: PAT-ER registers};
+\end{tikzpicture}%
+}
+\caption{Contribution matrix graph. PAT-ER registers improve primitive macro-F1, role-to-primitive macro-F1, and contradiction recall over the token-pooled baseline on the same backbone.}
+\label{fig:contribution_matrix}
+\end{figure}
+

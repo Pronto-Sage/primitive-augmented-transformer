@@ -1,0 +1,79 @@
+\section{Materials and Methods}
+\label{sec:methods}
+
+\subsection{Data Sources and Conversion}
+
+The dataset stack combines synthetic PAT-ER records with converted external
+reasoning records. Synthetic records provide balanced coverage over 14 primitive
+families, diversified argument surfaces, support-status coverage, hard
+negatives, and tool/IDK/schema labels. External records come from ProofWriter
+\citep{tafjord2021proofwriter} and FOLIO \citep{han2024folio}, converted into
+PAT-ER records with provenance metadata and without rendering proof traces into
+the model input. NLI and explicit-conflict sources such as SNLI
+\citep{bowman2015snli} and FEVER \citep{thorne2018fever} were evaluated as
+candidate additions, but the main mix rejects SNLI-style explicit-conflict data
+because it interferes with ProofWriter-style proof refutation.
+
+The current recommended reasoning mix is the repaired real-external mix:
+diversified synthetic support coverage plus real ProofWriter meta-abduction and
+shallow OWA reasoning records. Deeper OWA/CWA ProofWriter slices are retained as
+infrastructure but are not merged into the baseline because they trade away the
+shallow contradiction competence of the 450M-from-scratch track.
+
+\subsection{Conditions}
+
+\input{tables/T2_conditions}
+
+Condition B and C are the primary architecture comparison: same pretrained
+\Qwen{} backbone, same data, same auxiliary labels, but B reads token-pooled
+states whereas C uses PAT-ER event-role and primitive registers. Condition D is
+the usable warm-start model. Condition E is documented as a rejected
+aux-refresh variant.
+
+\subsection{Training Gates}
+
+The experimental method is gate-based:
+
+\begin{enumerate}
+  \item audit labels and input leakage before training;
+  \item run a bounded experiment with explicit pass/fail criteria;
+  \item document both positive and negative outcomes;
+  \item freeze only after a pass;
+  \item scale only after the failure cause is understood.
+\end{enumerate}
+
+This method is why failed branches are visible in the results rather than
+absorbed into an undocumented search process.
+
+\subsection{Statistical Reporting}
+
+For the main B/C matrix, paired seed deltas are bootstrapped with 2000
+resamples. For a metric $m$ and seed $i$, the paired delta is
+
+\begin{equation}
+\Delta_i = m_i^{(C)} - m_i^{(B)}.
+\label{eq:paired_delta}
+\end{equation}
+
+The reported effect is
+
+\begin{equation}
+\bar{\Delta} = \frac{1}{n}\sum_{i=1}^{n}\Delta_i,
+\label{eq:mean_delta}
+\end{equation}
+
+and the 95\% confidence interval is the 2.5/97.5 percentile interval of the
+bootstrap distribution of $\bar{\Delta}$.
+
+\subsection{Evaluation Metrics}
+
+Primary architecture metrics are primitive macro-F1, role-to-primitive macro-F1,
+contradiction recall, entailment-refuted recall, and LM loss. Product metrics
+are Hermes parse rate, exact argument correctness, argument value accuracy, JSON
+validity, required-key correctness, IDK F1, and base-mode drift against
+Condition D.
+
+Strict first-occurrence span exactness is diagnostic only. When logical atoms
+repeat, any co-referent mention is a valid grounding target; therefore the
+primary span metric is any-occurrence joint span accuracy.
+

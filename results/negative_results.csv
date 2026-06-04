@@ -1,0 +1,8 @@
+gate,result,diagnosis,retained_use
+synthetic_external_augmentation,failed,synthetic-derived external-style records interfered with real external span generalization,eval_or_curriculum_infrastructure
+explicit_conflict_nli,failed,NLI contradiction competed with ProofWriter implicit refutation,converter_and_fixtures
+fact_pointer_token,failed,token pointer could not represent distributed fact sets,tested_not_kept
+evidence_item_heads,failed,contradicting-item positives too sparse at tested scale,tested_not_kept
+deep_cwa_from_scratch,failed,450M from-scratch did not learn deeper CWA refutation reliably,future_warmstart_data
+shared_layer_interface_sft,conditional_fail,interface training regressed role-to-primitive bridge,replaced_by_decoupled_interface_mode
+

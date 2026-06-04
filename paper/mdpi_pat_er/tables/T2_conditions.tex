@@ -1,0 +1,16 @@
+\begin{table}[H]
+\caption{Experimental conditions used in the paper.\label{tab:conditions}}
+\footnotesize
+\begin{tabularx}{\textwidth}{@{}p{0.08\linewidth}p{0.31\linewidth}p{0.31\linewidth}X@{}}
+\toprule
+\textbf{Label} & \textbf{Description} & \textbf{Purpose} & \textbf{Status} \\
+\midrule
+A & From-scratch 450M PAT-ER & Establish from-scratch reasoning ceiling & Secondary baseline \\
+B & Qwen3-0.6B plus token-pooled auxiliary heads & Same-backbone label baseline without registers & Architecture control \\
+C & Qwen3-0.6B plus PAT-ER registers, no injection & Test event-role and primitive side-state & Primary architecture condition \\
+D & Warm-start PAT-ER through Stage 5B & Usable model with recovered LM quality & Model of record \\
+E & Stage 5B plus aux-refresh & Test whether aux heads should be refreshed after adaptation & Rejected: class forgetting \\
+\bottomrule
+\end{tabularx}
+\end{table}
+

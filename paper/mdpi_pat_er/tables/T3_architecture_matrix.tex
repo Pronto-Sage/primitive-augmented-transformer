@@ -1,0 +1,16 @@
+\begin{table}[H]
+\caption{Primary architecture result on shallow OWA validation data, eight seeds. CIs are paired bootstrap 95\% intervals for B to C deltas.\label{tab:architecture_matrix}}
+\footnotesize
+\begin{tabularx}{\textwidth}{@{}p{0.28\linewidth}p{0.18\linewidth}p{0.18\linewidth}p{0.15\linewidth}X@{}}
+\toprule
+\textbf{Metric} & \textbf{B: Qwen + labels} & \textbf{C: PAT-ER registers} & \textbf{Delta} & \textbf{95\% CI} \\
+\midrule
+Primitive macro-F1 & 0.682 $\pm$ 0.027 & \textbf{0.891 $\pm$ 0.022} & \textbf{+0.209} & [0.182, 0.237] \\
+Role-to-primitive macro-F1 & 0.815 $\pm$ 0.005 & \textbf{0.905 $\pm$ 0.029} & \textbf{+0.090} & [0.074, 0.110] \\
+Contradiction recall & 0.242 $\pm$ 0.110 & \textbf{0.735 $\pm$ 0.202} & +0.492 & [0.280, 0.705] \\
+Entailment refuted recall & 0.021 $\pm$ 0.059 & \textbf{0.427 $\pm$ 0.433} & +0.406 & [0.167, 0.677] \\
+LM loss & 2.563 $\pm$ 0.059 & 2.555 $\pm$ 0.057 & $\approx$0 & not material \\
+\bottomrule
+\end{tabularx}
+\end{table}
+

@@ -1,0 +1,18 @@
+\section{Conclusions}
+\label{sec:conclusions}
+
+PAT-ER tests a concrete hypothesis: logical primitives can function as semantic
+heads in a decoder architecture when they are coupled to event-role registers
+rather than inferred only from pooled token states. The eight-seed B/C matrix
+supports this hypothesis. Primitive macro-F1 improves by 0.209 and
+role-to-primitive macro-F1 by 0.090 with no LM-loss cost on the same pretrained
+backbone.
+
+The usable-model path is also established but bounded. Warm-started PAT-ER
+recovers pretrained LM quality, safe register-only modulation preserves the
+decoder, and decoupled interface mode yields robust schema-grounded function
+calling and JSON output at zero measured side-state cost. The model is not a
+theorem prover, not production safety-certified, and not a perfect tool-name
+copying system. Its contribution is a measured, ablatable semantic side-state
+and a practical way to use it without damaging the base language model.
+

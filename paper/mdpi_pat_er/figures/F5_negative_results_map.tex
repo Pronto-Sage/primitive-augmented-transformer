@@ -1,0 +1,25 @@
+\begin{figure}[H]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+  font=\small,
+  bad/.style={draw, rounded corners=2pt, minimum width=32mm, minimum height=10mm, align=center, fill=red!10},
+  good/.style={draw, rounded corners=2pt, minimum width=32mm, minimum height=10mm, align=center, fill=green!12},
+  arr/.style={->, line width=0.8pt}
+]
+\node[bad] (a) {External-style\\synthetic aug\\rejected};
+\node[bad, right=6mm of a] (b) {SNLI explicit\\conflict\\rejected};
+\node[bad, right=6mm of b] (c) {Fact pointers\\item heads\\rejected};
+\node[bad, below=8mm of b] (d) {Shared-layer\\interface SFT\\bridge cost};
+\node[good, right=10mm of d] (e) {Decoupled\\interface mode\\accepted};
+\draw[arr] (a) -- (b);
+\draw[arr] (b) -- (c);
+\draw[arr] (d) -- (e);
+\node[draw, dashed, rounded corners=2pt, fit=(a)(b)(c)(d)(e), inner sep=4mm,
+      label={[font=\small]above:Audit-disciplined gate record}] {};
+\end{tikzpicture}%
+}
+\caption{Negative-result map. Plausible additions were tested and rejected when they harmed the targeted slice or damaged the bridge.}
+\label{fig:negative_results}
+\end{figure}
+

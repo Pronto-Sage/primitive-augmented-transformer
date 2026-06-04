@@ -1,0 +1,18 @@
+\begin{table}[H]
+\caption{Decoupled interface evaluation on 242 held-out prompts, three seeds.\label{tab:interface_eval}}
+\footnotesize
+\begin{tabularx}{\textwidth}{@{}p{0.34\linewidth}p{0.18\linewidth}p{0.16\linewidth}X@{}}
+\toprule
+\textbf{Metric} & \textbf{Result} & \textbf{Target} & \textbf{Verdict} \\
+\midrule
+Hermes parse & \textbf{0.952} & $\ge$0.90 & Pass \\
+Tool arguments exact & \textbf{0.981} & $\ge$0.80 & Pass \\
+Argument value accuracy & 0.923 & -- & Reported \\
+JSON valid / required keys & \textbf{1.000 / 1.000} & $\ge$0.95 & Pass \\
+IDK precision/recall/F1 & \textbf{1.000} & 1.000 & Pass \\
+Base-mode primitive/r2p/LM vs D & byte-identical & exact & Pass \\
+Tool-name exact accuracy & 0.886 & $\ge$0.90 & Boundary \\
+\bottomrule
+\end{tabularx}
+\end{table}
+

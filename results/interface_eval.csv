@@ -1,0 +1,11 @@
+metric,mean,target,verdict,notes
+hermes_parse,0.952,0.90,pass,242 held-out prompts; 3 seeds
+tool_args_exact,0.981,0.80,pass,no hallucinated args; required args present
+arg_value_accuracy,0.923,,reported,exact value match
+json_valid,1.000,0.95,pass,
+json_keys,1.000,0.95,pass,
+idk_f1,1.000,1.00,pass,
+contradiction_generation_sane,0.930,,pass,
+tool_name_exact,0.886,0.90,boundary,semantic substitution and multi-token truncation on some unseen names
+base_mode_side_state_drift,0.000,0.00,pass,base-mode primitive/r2p/LM identical to Condition D
+

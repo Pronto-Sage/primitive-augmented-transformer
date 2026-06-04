@@ -1,0 +1,26 @@
+\begin{figure}[H]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+  font=\small,
+  >=Latex,
+  stagebox/.style={draw, rounded corners=2pt, minimum width=34mm, minimum height=12mm, align=center, fill=blue!8},
+  pass/.style={draw, rounded corners=2pt, minimum width=34mm, minimum height=12mm, align=center, fill=green!14},
+  arr/.style={->, line width=0.8pt}
+]
+\node[stagebox] (s3) {Stage 3\\frozen backbone\\registers learn};
+\node[stagebox, right=8mm of s3] (s4) {Stage 4\\register-only\\safe injection};
+\node[stagebox, right=8mm of s4] (s5a) {Stage 5A\\upper adapters\\selective open};
+\node[pass, right=8mm of s5a] (s5b) {Stage 5B\\top-2 backbone\\KL guarded};
+\draw[arr] (s3) -- (s4);
+\draw[arr] (s4) -- (s5a);
+\draw[arr] (s5a) -- (s5b);
+\node[below=7mm of s3] {primitive 0.006 $\to$ 0.884};
+\node[below=7mm of s4] {LM delta within guard};
+\node[below=7mm of s5a] {layers 21--27 adapt};
+\node[below=7mm of s5b] {LM loss 1.344};
+\end{tikzpicture}%
+}
+\caption{Warm-start validation sequence. The usable model is obtained only after safe injection, selective adapter opening, and KL-guarded top-layer adaptation.}
+\label{fig:warmstart_stages}
+\end{figure}

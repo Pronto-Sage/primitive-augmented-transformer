@@ -1,0 +1,205 @@
+\section{Architecture}
+\label{sec:architecture}
+
+Let $X_\ell \in \mathbb{R}^{T \times d}$ be the token stream at layer $\ell$,
+$E_\ell \in \mathbb{R}^{M_e \times d}$ the event-role register bank, and
+$P_\ell \in \mathbb{R}^{M_p \times d}$ the primitive register bank. The normal
+decoder stream is updated by grouped-query causal self-attention:
+
+\begin{equation}
+H_\ell = X_\ell + \Attn_{\mathrm{causal}}\!\left(\LN(X_\ell)\right).
+\label{eq:token_update}
+\end{equation}
+
+The event-role stream reads from token states:
+
+\begin{equation}
+\widetilde{E}_\ell =
+E_\ell +
+\Attn_{E \leftarrow X}\!\left(
+Q=\LN(E_\ell),\,
+K=\LN(H_\ell),\,
+V=\LN(H_\ell)
+\right).
+\label{eq:event_read}
+\end{equation}
+
+The token stream then receives an event-role signal $Z^E_\ell$:
+
+\begin{equation}
+Z^E_\ell =
+\Attn_{X \leftarrow E}\!\left(
+Q=\LN(H_\ell),\,
+K=\LN(\widetilde{E}_\ell),\,
+V=\LN(\widetilde{E}_\ell)
+\right).
+\label{eq:event_write}
+\end{equation}
+
+In the from-scratch architecture, the event injection can use token state,
+register state, and their interaction:
+
+\begin{equation}
+H'_\ell = H_\ell + W_E \left[H_\ell \concat Z^E_\ell \concat
+                    (H_\ell \odot Z^E_\ell)\right].
+\label{eq:residual_injection}
+\end{equation}
+
+For warm-started pretrained decoders, this residual fusion is too aggressive:
+the pretrained hidden state $H_\ell$ dominates the injection path. The validated
+warm-start rule is register-only and detached:
+
+\begin{equation}
+H'_\ell = H_\ell + \alpha_E W_E \stopgrad(Z^E_\ell),
+\quad \alpha_E \ll 1.
+\label{eq:warmstart_injection}
+\end{equation}
+
+The primitive stream reads from the event-enriched token and event states:
+
+\begin{equation}
+\widetilde{P}_\ell =
+P_\ell +
+\Attn_{P \leftarrow X,E}\!\left(
+Q=\LN(P_\ell),\,
+K=\LN([H'_\ell; \widetilde{E}_\ell]),\,
+V=\LN([H'_\ell; \widetilde{E}_\ell])
+\right),
+\label{eq:primitive_read}
+\end{equation}
+
+and writes primitive information back to tokens:
+
+\begin{equation}
+Z^P_\ell =
+\Attn_{X \leftarrow P}\!\left(
+Q=\LN(H'_\ell),\,
+K=\LN(\widetilde{P}_\ell),\,
+V=\LN(\widetilde{P}_\ell)
+\right).
+\label{eq:primitive_write}
+\end{equation}
+
+The primitive-enriched token state is
+
+\begin{equation}
+H''_\ell =
+H'_\ell + W_P\left[H'_\ell \concat Z^P_\ell \concat
+                  (H'_\ell \odot Z^P_\ell)\right],
+\label{eq:primitive_injection}
+\end{equation}
+
+or, in warm-start-safe mode,
+
+\begin{equation}
+H''_\ell = H'_\ell + \alpha_P W_P \stopgrad(Z^P_\ell).
+\label{eq:warmstart_primitive_injection}
+\end{equation}
+
+Finally, the layer output combines the base feed-forward network with
+primitive-conditioned adapters:
+
+\begin{equation}
+X_{\ell+1} =
+H''_\ell +
+\operatorname{FFN}_{\mathrm{base}}(H''_\ell) +
+\sum_{k=1}^{K} g_k(\widetilde{P}_\ell)\,
+\operatorname{Adapter}_k(H''_\ell).
+\label{eq:ffn_adapters}
+\end{equation}
+
+\subsection{Primitive Semantic Heads}
+\label{subsec:semantic_heads}
+
+Each primitive head answers a characteristic question:
+
+\begin{equation}
+\begin{array}{lll}
+\text{modus ponens} &:& \text{from which verified antecedent does this follow?}\\
+\text{syllogism} &:& \text{which chained rule licenses this conclusion?}\\
+\text{contradiction} &:& \text{what evidence or derivation conflicts with it?}\\
+\text{abduction} &:& \text{what hypothesis would explain the observation?}\\
+\text{idk/unknown} &:& \text{what evidence is missing before answering?}
+\end{array}
+\label{eq:primitive_questions}
+\end{equation}
+
+This question view is not only interpretive. It determines the labels and losses
+attached to each head: primitive class, support status, entailment state,
+role-to-primitive mapping, verifier likelihood, evidence pointer, IDK action,
+tool intent, and schema mode.
+
+\subsection{Losses}
+\label{subsec:losses}
+
+The supervised objective is
+
+\begin{equation}
+\mathcal{L}
+=
+\lambda_{\mathrm{LM}}\LM
++ \sum_{h \in \mathcal{H}} \lambda_h
+   \operatorname{CE}(y_h, f_h(X,E,P))
++ \lambda_{\mathrm{span}}\Lspan
++ \lambda_{\mathrm{iface}}\Liface
++ \beta \LKL.
+\label{eq:total_loss}
+\end{equation}
+
+For ambiguous repeated logical atoms, strict first-occurrence span labels are
+not semantically well-defined. Let $S^+$ be the set of all token positions that
+are valid mentions of the same gold argument. The set-valued cross-entropy is
+
+\begin{equation}
+\mathcal{L}_{\mathrm{multi+}}(\ell, S^+)
+=
+\log \sum_j \exp(\ell_j)
+-
+\log \sum_{i \in S^+} \exp(\ell_i).
+\label{eq:multipositive_ce}
+\end{equation}
+
+For joint span decoding, valid start/end pairs are restricted to a width band
+$\mathcal{B}$:
+
+\begin{equation}
+(\hat{s},\hat{e})
+=
+\arg\max_{(s,e)\in\mathcal{B},\,e\ge s}
+\left(\ell^{\mathrm{start}}_s + \ell^{\mathrm{end}}_e\right).
+\label{eq:joint_span_decode}
+\end{equation}
+
+\subsection{Decoupled Interface Mode}
+\label{subsec:interface_mode}
+
+The usable checkpoint has two execution modes. Base mode uses the original
+decoder blocks and measures the architecture:
+
+\begin{equation}
+y_{\mathrm{base}} = F_{\mathrm{D}}(x;\theta_{\mathrm{base}}).
+\label{eq:base_mode}
+\end{equation}
+
+Interface mode swaps only the copied top-$K$ interface blocks:
+
+\begin{equation}
+y_{\mathrm{iface}} =
+F_{\mathrm{D}}\!\left(x;\theta_{\mathrm{base}},
+                     \theta_{\mathrm{iface}}^{(L-K+1:L)}\right).
+\label{eq:interface_mode}
+\end{equation}
+
+The training invariant is
+
+\begin{equation}
+F_{\mathrm{D}}(x;\theta_{\mathrm{base}})
+=
+F_{\mathrm{D+iface}}(x;\theta_{\mathrm{base}})
+\quad \text{in base mode},
+\label{eq:base_identity}
+\end{equation}
+
+which is checked empirically as byte-identical primitive, role-to-primitive,
+and LM metrics.
+

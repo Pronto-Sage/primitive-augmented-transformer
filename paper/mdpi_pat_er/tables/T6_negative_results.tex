@@ -1,0 +1,18 @@
+\begin{table}[H]
+\caption{Documented negative results and retained decision.\label{tab:negative_results}}
+\footnotesize
+\begin{tabularx}{\textwidth}{@{}p{0.25\linewidth}p{0.38\linewidth}X@{}}
+\toprule
+\textbf{Gate} & \textbf{Observed failure} & \textbf{Decision} \\
+\midrule
+Synthetic external-style augmentation & Hurt the real external slice even when synthetic-ext spans were learnable & Do not merge; use only for eval/curriculum \\
+SNLI / explicit-conflict NLI & Improved its own conflict form but damaged ProofWriter contradiction & Reject from main mix \\
+Token fact pointers & Failed to learn distributed fact sets and regressed MP & Gate off \\
+Evidence-item heads & Supporting item learned weakly; contradicting item did not learn & Gate off \\
+Deep/CWA from-scratch data & Improved in-distribution deep/CWA but destroyed shallow contradiction & Do not merge for 450M-from-scratch \\
+Stage 6B aux-refresh & Catastrophic forgetting of contingency and axiom boundaries & Reject E \\
+Shared-layer interface SFT & Tool calls improved but role-to-primitive regressed by 0.094 & Replace with decoupled interface mode \\
+\bottomrule
+\end{tabularx}
+\end{table}
+

@@ -1,0 +1,15 @@
+\begin{table}[H]
+\caption{Warm-start validation stages.\label{tab:warmstart_stages}}
+\footnotesize
+\begin{tabularx}{\textwidth}{@{}p{0.16\linewidth}p{0.39\linewidth}X@{}}
+\toprule
+\textbf{Stage} & \textbf{What was tested} & \textbf{Key result} \\
+\midrule
+Stage 3 & Train PAT-ER registers on frozen Qwen3 backbone & Primitive macro-F1 0.006 to 0.884; LM unchanged \\
+Stage 4 & Open safe register-only injection & LM delta within guard; KL below threshold; generation modulated \\
+Stage 5A & Open upper-layer PAT-ER adapters & Layers 21--27 adapt; lower layers remain unchanged \\
+Stage 5B & Unfreeze top two Qwen layers under KL guard & Backbone adapts safely; KL guard never triggers \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
