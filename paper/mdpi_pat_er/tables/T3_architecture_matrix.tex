@@ -1,15 +1,18 @@
 \begin{table}[H]
-\caption{Primary architecture result on shallow OWA validation data, eight seeds. CIs are paired bootstrap 95\% intervals for B to C deltas.\label{tab:architecture_matrix}}
+\caption{Architecture and structured-state controls on shallow OWA validation data, eight seeds. B uses token-pooled auxiliary heads, G uses generic learned registers, C uses typed PAT-ER event-role and primitive registers, and D is the usable warm-start model.\label{tab:architecture_matrix}}
 \footnotesize
-\begin{tabularx}{\textwidth}{@{}p{0.28\linewidth}p{0.18\linewidth}p{0.18\linewidth}p{0.15\linewidth}X@{}}
+\begin{tabularx}{\textwidth}{@{}p{0.28\linewidth}p{0.16\linewidth}p{0.16\linewidth}p{0.16\linewidth}X@{}}
 \toprule
-\textbf{Metric} & \textbf{B: Qwen + labels} & \textbf{C: PAT-ER registers} & \textbf{Delta} & \textbf{95\% CI} \\
+\textbf{Metric} & \textbf{B: token state} & \textbf{G: generic reg.} & \textbf{C: PAT-ER typed} & \textbf{D: usable model} \\
 \midrule
-Primitive macro-F1 & 0.682 $\pm$ 0.027 & \textbf{0.891 $\pm$ 0.022} & \textbf{+0.209} & [0.182, 0.237] \\
-Role-to-primitive macro-F1 & 0.815 $\pm$ 0.005 & \textbf{0.905 $\pm$ 0.029} & \textbf{+0.090} & [0.074, 0.110] \\
-Contradiction recall & 0.242 $\pm$ 0.110 & \textbf{0.735 $\pm$ 0.202} & +0.492 & [0.280, 0.705] \\
-Entailment refuted recall & 0.021 $\pm$ 0.059 & \textbf{0.427 $\pm$ 0.433} & +0.406 & [0.167, 0.677] \\
-LM loss & 2.563 $\pm$ 0.059 & 2.555 $\pm$ 0.057 & $\approx$0 & not material \\
+Primitive macro-F1 & 0.682 $\pm$ 0.028 & 0.775 $\pm$ 0.053 & \textbf{0.891 $\pm$ 0.022} & 0.841 $\pm$ 0.061 \\
+Role-to-primitive macro-F1 & 0.815 $\pm$ 0.005 & 0.795 $\pm$ 0.063 & \textbf{0.905 $\pm$ 0.029} & 0.873 $\pm$ 0.053 \\
+Contradiction precision (primitive) & 0.337 $\pm$ 0.147 & 0.702 $\pm$ 0.224 & \textbf{0.780 $\pm$ 0.176} & 0.745 $\pm$ 0.191 \\
+Contradiction recall (primitive) & 0.307 $\pm$ 0.153 & 0.494 $\pm$ 0.215 & \textbf{0.767 $\pm$ 0.183} & 0.761 $\pm$ 0.233 \\
+Contradiction F1 (primitive) & 0.320 $\pm$ 0.150 & 0.515 $\pm$ 0.181 & \textbf{0.742 $\pm$ 0.090} & 0.707 $\pm$ 0.109 \\
+Contradiction F1 (role-to-primitive) & 0.586 $\pm$ 0.052 & 0.341 $\pm$ 0.300 & \textbf{0.755 $\pm$ 0.095} & 0.735 $\pm$ 0.101 \\
+Entailment-refuted F1 & 0.036 $\pm$ 0.101 & 0.059 $\pm$ 0.168 & \textbf{0.335 $\pm$ 0.302} & 0.261 $\pm$ 0.333 \\
+LM loss & 2.563 $\pm$ 0.059 & 2.563 $\pm$ 0.059 & 2.555 $\pm$ 0.057 & \textbf{1.344 $\pm$ 0.099} \\
 \bottomrule
 \end{tabularx}
 \end{table}

@@ -10,10 +10,12 @@ questions with different state channels. This matters because many reasoning
 failures are not simply failures to produce the right text; they are failures to
 separate the kind of answer being produced.
 
-The strongest support is B versus C. Both conditions share the same Qwen3-0.6B
-backbone and data. B has access to labels through token-pooled auxiliary heads.
-C has the PAT-ER side-state. The consistent B/C gap means that the register
-architecture contributes beyond label availability.
+The strongest support is the B/G/C ladder. All three conditions share the same
+Qwen3-0.6B backbone, data, and supervised labels. B has access to labels through
+token-pooled auxiliary heads. G adds learned registers but removes typed
+event-role-to-primitive organization. C restores the typed PAT-ER flow. The
+consistent G-to-C gain means that the result is not explained merely by label
+availability or by adding generic latent state.
 
 \subsection{Fixed Flow Versus Flexible Generation}
 
@@ -57,4 +59,3 @@ bridge. Mode-gated interface layers solve this by making output behavior a
 separate execution path. This is a practical design rule for usable systems:
 measure side-state in base mode; generate product-format outputs in
 \texttt{interface\_mode}; never treat the two as interchangeable.
-

@@ -5,18 +5,18 @@ PAT-ER proposes and predicts; it does not prove, certify, or guarantee.
 
 First, the reasoning datasets are narrow. ProofWriter and FOLIO are appropriate
 for controlled logical supervision, but they do not cover broad real-world
-reasoning. Second, deep/CWA refutation remains a known limit. Warm-started
-registers exceed the from-scratch 450M ceiling, but contradiction recall is not
-perfect. Third, the usable interface is not safety-certified. Tool calls are
-proposals and must be validated against a real schema before execution. Fourth,
-unseen tool-name exact accuracy is 0.886, below the exact-name target of 0.90.
-The failures are semantic substitution and multi-token truncation on a minority
-of unseen names. Fifth, 760M-from-scratch is not validated; the validated usable
-path is warm-started Qwen3-0.6B plus PAT-ER side-state and decoupled interface
-mode.
+reasoning. The B/G/C matrix strengthens the architectural interpretation, but
+the metrics remain supervised probes over the PAT-ER annotation space. Second,
+deep/CWA refutation remains a known limit. Warm-started registers exceed the
+from-scratch 450M ceiling, but contradiction recall is not perfect. Third, the
+usable interface is not safety-certified. Tool calls are proposals and must be
+validated against a real schema before execution. Fourth, unseen tool-name exact
+accuracy is 0.886, below the exact-name target of 0.90. The failures are
+semantic substitution and multi-token truncation on a minority of unseen names.
+Fifth, 760M-from-scratch is not validated; the validated usable path is
+warm-started Qwen3-0.6B plus PAT-ER side-state and decoupled interface mode.
 
 The paper also does not claim that every logical primitive can be exhaustively
 captured by a fixed neural head. The claim is narrower: selected primitive
 families can be treated as semantic heads well enough to produce measurable
 architecture signal and usable guarded output.
-

@@ -8,22 +8,24 @@
     {\draw (-0.08,\y) -- (0.08,\y) node[left=4pt]{\lab};}
 
   % scale: score * 5
-  \foreach \x/\name/\b/\c in {
-    1.0/Primitive F1/3.41/4.46,
-    4.0/r2p F1/4.08/4.53,
-    7.0/Contradiction/1.21/3.68
+  \foreach \x/\name/\b/\g/\c in {
+    1.0/Primitive F1/3.41/3.88/4.46,
+    4.0/r2p F1/4.08/3.98/4.53,
+    7.0/Contra F1/1.60/2.58/3.71
   }{
-    \draw[fill=gray!35] (\x,0) rectangle ++(0.55,\b);
-    \draw[fill=blue!55] (\x+0.7,0) rectangle ++(0.55,\c);
-    \node[rotate=20, anchor=east] at (\x+1.25,-0.25) {\name};
+    \draw[fill=gray!35] (\x,0) rectangle ++(0.42,\b);
+    \draw[fill=orange!55] (\x+0.5,0) rectangle ++(0.42,\g);
+    \draw[fill=blue!55] (\x+1.0,0) rectangle ++(0.42,\c);
+    \node[rotate=20, anchor=east] at (\x+1.45,-0.25) {\name};
   }
   \node[fill=gray!35, draw, minimum width=5mm] at (8.9,4.75) {};
   \node[right] at (9.25,4.75) {B: Qwen + labels};
-  \node[fill=blue!55, draw, minimum width=5mm] at (8.9,4.35) {};
-  \node[right] at (9.25,4.35) {C: PAT-ER registers};
+  \node[fill=orange!55, draw, minimum width=5mm] at (8.9,4.35) {};
+  \node[right] at (9.25,4.35) {G: generic registers};
+  \node[fill=blue!55, draw, minimum width=5mm] at (8.9,3.95) {};
+  \node[right] at (9.25,3.95) {C: typed PAT-ER};
 \end{tikzpicture}%
 }
-\caption{Contribution matrix graph. PAT-ER registers improve primitive macro-F1, role-to-primitive macro-F1, and contradiction recall over the token-pooled baseline on the same backbone.}
+\caption{Contribution matrix graph. Generic learned registers improve some metrics over token pooling, but typed PAT-ER registers add a further gain, especially on the role-to-primitive and contradiction axes.}
 \label{fig:contribution_matrix}
 \end{figure}
-

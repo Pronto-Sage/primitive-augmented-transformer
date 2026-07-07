@@ -41,15 +41,18 @@ MDPI work on LLM--knowledge-graph integration and neural--symbolic reasoning
 claim: the structured state is inside the decoder rather than supplied only as
 an external graph, retrieved context, or post-hoc explanation.
 
-The experimental record supports three bounded claims. First, the register
-architecture matters: on the same \Qwen{} backbone and same data, PAT-ER
-registers outperform token-pooled auxiliary heads across eight seeds. Second,
-the side-state can be attached to a pretrained decoder without destroying
-language-model behavior, provided the injection path is register-only,
-detached, and trained at a calibrated injection learning rate. Third, product
-format generation can be separated from side-state measurement by a mode-gated
-interface path: base mode preserves the side-state exactly, while
-\texttt{interface\_mode} learns schema-grounded tool calls and JSON output.
+The experimental record supports three bounded claims. First, the typed
+register architecture matters: on the same \Qwen{} backbone and same data,
+PAT-ER registers outperform both token-pooled auxiliary heads and a generic
+learned-register control across eight seeds. The generic-register condition is
+important because it separates typed event-role $\rightarrow$ primitive flow
+from the broader effect of adding latent state. Second, the side-state can be
+attached to a pretrained decoder without destroying language-model behavior,
+provided the injection path is register-only, detached, and trained at a
+calibrated injection learning rate. Third, product format generation can be
+separated from side-state measurement by a mode-gated interface path: base mode
+preserves the side-state exactly, while \texttt{interface\_mode} learns
+schema-grounded tool calls and JSON output.
 
 The paper is also intentionally negative where the evidence is negative. Several
 plausible paths failed: synthetic external-style augmentation hurt the real
@@ -75,8 +78,9 @@ This article contributes:
   including formulas for token/register updates, warm-start-safe injection, and
   set-valued span supervision.
   \item An eight-seed architecture matrix showing that PAT-ER registers improve
-  primitive macro-F1 and role-to-primitive macro-F1 over token-pooled auxiliary
-  heads on the same pretrained backbone.
+  primitive macro-F1 and role-to-primitive macro-F1 over both token-pooled
+  auxiliary heads and generic learned registers on the same pretrained
+  backbone.
   \item A warm-start procedure that preserves pretrained language behavior while
   allowing measured side-state modulation.
   \item A decoupled interface mode that produces schema-grounded tool calls and

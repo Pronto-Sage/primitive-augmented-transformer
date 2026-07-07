@@ -108,10 +108,34 @@ H''_\ell +
 \label{eq:ffn_adapters}
 \end{equation}
 
+\subsection{Parameterization and Practical Cost}
+\label{subsec:parameter_cost}
+
+The warm-started configuration uses hidden size $d=1024$, 28 decoder layers,
+context length 1024, 4 event registers, 6 argument registers, and 14 primitive
+registers. Cross-stream attention is applied every four layers. The model uses
+17 proto-role properties, six primitive-conditioned FFN adapters of rank 32, and
+rank-32 vocabulary-pressure projections. The from-scratch 450M comparison
+configuration uses the same hidden size with 16 layers and 457.9M parameters.
+The Qwen3-compatible warm-start model loads 595.8M pretrained backbone
+parameters; the remaining PAT-ER parameters include the extended vocabulary,
+side-state streams, auxiliary heads, pressure heads, and interface components.
+
+The register counts are small relative to the token context. At a cross-stream
+layer, token-register attention adds a term proportional to
+$O(T(M_e+M_a+M_p)d)$, while causal self-attention remains proportional to
+$O(T^2d)$ for sequence length $T$. For $T=1024$ and 24 total registers, the
+register-attention term is therefore not the dominant asymptotic cost. The
+reported experiments measure model metrics and memory-feasible training gates;
+they do not claim a hardware-independent wall-clock benchmark.
+
 \subsection{Primitive Semantic Heads}
 \label{subsec:semantic_heads}
 
-Each primitive head answers a characteristic question:
+We use \emph{semantic head} operationally: a fixed side-state channel and
+readout trained against a characteristic semantic target. This is not a claim
+that every individual register has been mechanistically interpreted. Each
+primitive head is associated with a characteristic question:
 
 \begin{equation}
 \begin{array}{lll}
@@ -124,10 +148,11 @@ Each primitive head answers a characteristic question:
 \label{eq:primitive_questions}
 \end{equation}
 
-This question view is not only interpretive. It determines the labels and losses
-attached to each head: primitive class, support status, entailment state,
-role-to-primitive mapping, verifier likelihood, evidence pointer, IDK action,
-tool intent, and schema mode.
+This question view is not only interpretive. It determines the supervised labels
+and losses attached to each head: primitive class, support status, entailment
+state, role-to-primitive mapping, verifier likelihood, evidence pointer, IDK
+action, tool intent, and schema mode. Causal interventions and register-level
+probing are left as future interpretability work.
 
 \subsection{Losses}
 \label{subsec:losses}
@@ -202,4 +227,3 @@ F_{\mathrm{D+iface}}(x;\theta_{\mathrm{base}})
 
 which is checked empirically as byte-identical primitive, role-to-primitive,
 and LM metrics.
-

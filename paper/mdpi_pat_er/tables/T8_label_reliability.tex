@@ -1,0 +1,15 @@
+\begin{table}[H]
+\caption{Deterministic label-reliability audit over sampled converted and synthetic records. The audit uses source and schema invariants, not LLM judging. Predicate relocation is diagnostic only because many predicates are lemma-level or abstract event labels rather than surface spans.\label{tab:label_reliability}}
+\scriptsize
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lrrrrrrrrr@{}}
+\toprule
+\textbf{Source} & \textbf{n} & \textbf{Primitive vocab} & \textbf{Support vocab} & \textbf{Event consistency} & \textbf{Exemptions} & \textbf{No CoT leak} & \textbf{Provenance} & \textbf{Arg spans} & \textbf{Evidence} \\
+\midrule
+External & 60 & 1.000 & 1.000 & 1.000 & 0 & 1.000 & 1.000 & 0.920 (104/113) & 1.000 (60/60) \\
+Synthetic & 60 & 1.000 & 1.000 & 1.000 & 14 & 1.000 & 1.000 & 1.000 (87/87) & 1.000 (44/44) \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+

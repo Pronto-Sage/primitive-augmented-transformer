@@ -20,15 +20,39 @@ shallow OWA reasoning records. Deeper OWA/CWA ProofWriter slices are retained as
 infrastructure but are not merged into the baseline because they trade away the
 shallow contradiction competence of the 450M-from-scratch track.
 
+\subsection{Supervision Reliability Audit}
+\label{subsec:label_reliability}
+
+Because the architecture is trained against converted and synthetic targets, we
+audited the supervision deterministically. The audit checks label vocabulary
+membership, event-local primitive/support consistency where the record-level
+primitive and event-local primitive are intended to coincide, absence of proof
+metadata or chain-of-thought leakage in the rendered input, provenance
+completeness, and recoverability of argument spans and evidence targets under
+the tokenizer. Interface/meta records whose record-level primitive is
+\texttt{tool}, \texttt{schema}, or \texttt{provenance} are reported as
+event-local exemptions because their event graph can legitimately describe an
+observation or conflict while the record-level target supervises interface
+behavior. The audit does not use an LLM as a label judge.
+
+\input{tables/T8_label_reliability}
+
+Predicate relocation was also measured as a diagnostic, but not used as a
+pass/fail criterion because predicates are often lemma-level or abstract event
+labels rather than surface spans. In the audit sample, predicate relocation was
+0/60 for external records and 27/60 for synthetic records, while argument spans
+and evidence targets relocated reliably.
+
 \subsection{Conditions}
 
 \input{tables/T2_conditions}
 
-Condition B and C are the primary architecture comparison: same pretrained
-\Qwen{} backbone, same data, same auxiliary labels, but B reads token-pooled
-states whereas C uses PAT-ER event-role and primitive registers. Condition D is
-the usable warm-start model. Condition E is documented as a rejected
-aux-refresh variant.
+Conditions B, G, and C form the primary architecture comparison: same pretrained
+\Qwen{} backbone, same data, same auxiliary labels, and the same training
+schedule. B reads token-pooled states, G uses a homogeneous learned-register
+bank with comparable register-update machinery, and C uses typed PAT-ER
+event-role and primitive registers. Condition D is the usable warm-start model.
+Condition E is documented as a rejected aux-refresh variant.
 
 \subsection{Training Gates}
 
@@ -47,11 +71,12 @@ absorbed into an undocumented search process.
 
 \subsection{Statistical Reporting}
 
-For the main B/C matrix, paired seed deltas are bootstrapped with 2000
-resamples. For a metric $m$ and seed $i$, the paired delta is
+For the main B/G/C/D matrix, paired seed deltas are bootstrapped with 2000
+resamples. For a metric $m$, seed $i$, source condition $X$, and target
+condition $Y$, the paired delta is
 
 \begin{equation}
-\Delta_i = m_i^{(C)} - m_i^{(B)}.
+\Delta_i^{X\rightarrow Y} = m_i^{(Y)} - m_i^{(X)}.
 \label{eq:paired_delta}
 \end{equation}
 
@@ -68,10 +93,10 @@ bootstrap distribution of $\bar{\Delta}$.
 \subsection{Evaluation Metrics}
 
 Primary architecture metrics are primitive macro-F1, role-to-primitive macro-F1,
-contradiction recall, entailment-refuted recall, and LM loss. Product metrics
-are Hermes parse rate, exact argument correctness, argument value accuracy, JSON
-validity, required-key correctness, IDK F1, and base-mode drift against
-Condition D.
+contradiction precision/recall/F1, entailment-refuted precision/recall/F1, and
+LM loss. Product metrics are Hermes parse rate, exact argument correctness,
+argument value accuracy, JSON validity, required-key correctness, IDK F1, and
+base-mode drift against Condition D.
 
 Strict first-occurrence span exactness is diagnostic only. When logical atoms
 repeat, any co-referent mention is a valid grounding target; therefore the

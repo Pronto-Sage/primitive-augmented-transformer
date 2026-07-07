@@ -1,15 +1,30 @@
 \section{Results}
 \label{sec:results}
 
-\subsection{Journal-Facing Result Summary}
+\subsection{Architecture and Structured-State Controls}
 
-The most important result is the B/C architecture matrix. Adding PAT-ER
+The most important result is the B/G/C architecture matrix. Adding typed PAT-ER
 registers to the same pretrained backbone improves primitive macro-F1 by 0.209
-and role-to-primitive macro-F1 by 0.090 across eight seeds. Both confidence
-intervals exclude zero, and LM loss is unchanged.
+and role-to-primitive macro-F1 by 0.091 over the token-state baseline across
+eight seeds. A generic-register control also improves some metrics over token
+pooling, so it is not a strawman. However, typed PAT-ER adds a further
+significant increment over generic registers: +0.116 primitive macro-F1,
++0.110 role-to-primitive macro-F1, +0.273 primitive-contradiction recall, and
++0.227 primitive-contradiction F1 on shallow OWA validation data. The same
+ordering holds on deep/CWA validation.
 
 \input{figures/F2_contribution_matrix}
 \input{tables/T3_architecture_matrix}
+\input{tables/T7_reviewer_deltas}
+
+The role-to-primitive contradiction axis is the clearest discriminator between
+generic and typed structure. Generic registers are worse than token pooling on
+role-to-primitive contradiction F1, while typed PAT-ER recovers it. In paired
+seed deltas, B $\rightarrow$ G is negative on this axis ($-0.273$, 95\% CI
+[$-0.443$, $-0.097$]), whereas G $\rightarrow$ C is strongly positive
+(+0.483, 95\% CI [0.239, 0.733]). This indicates that undifferentiated register
+capacity cannot substitute for typed event-role $\rightarrow$ primitive
+coupling.
 
 \subsection{Warm-Started Usable Model}
 
@@ -54,4 +69,3 @@ not help at the available refutation density. Aux-refresh on the adapted
 backbone causes class forgetting. Shared-layer SFT improves output formatting
 but damages the bridge. The accepted recipe avoids these failure modes by
 keeping architecture measurement and product generation decoupled.
-

@@ -3,10 +3,13 @@
 
 PAT-ER tests a concrete hypothesis: logical primitives can function as semantic
 heads in a decoder architecture when they are coupled to event-role registers
-rather than inferred only from pooled token states. The eight-seed B/C matrix
-supports this hypothesis. Primitive macro-F1 improves by 0.209 and
-role-to-primitive macro-F1 by 0.090 with no LM-loss cost on the same pretrained
-backbone.
+rather than inferred only from pooled token states or stored in generic learned
+registers. The eight-seed B/G/C matrix supports this hypothesis. Relative to
+token pooling, typed PAT-ER improves primitive macro-F1 by 0.209 and
+role-to-primitive macro-F1 by 0.091 with no LM-loss cost on the same pretrained
+backbone. Relative to generic registers, it adds +0.116 primitive macro-F1 and
++0.110 role-to-primitive macro-F1, showing that typed flow matters beyond
+undifferentiated latent capacity.
 
 The usable-model path is also established but bounded. Warm-started PAT-ER
 recovers pretrained LM quality, safe register-only modulation preserves the
@@ -15,4 +18,3 @@ calling and JSON output at zero measured side-state cost. The model is not a
 theorem prover, not production safety-certified, and not a perfect tool-name
 copying system. Its contribution is a measured, ablatable semantic side-state
 and a practical way to use it without damaging the base language model.
-

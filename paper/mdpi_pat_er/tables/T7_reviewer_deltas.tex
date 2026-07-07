@@ -1,0 +1,16 @@
+\begin{table}[H]
+\caption{Paired seed deltas for the structured-state control. Bold entries have bootstrap 95\% confidence intervals excluding zero. The G $\rightarrow$ C rows test whether typed PAT-ER flow improves over generic learned registers.\label{tab:reviewer_deltas}}
+\scriptsize
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}llllll@{}}
+\toprule
+\textbf{Delta} & \textbf{Primitive macro-F1} & \textbf{R2P macro-F1} & \textbf{Contradiction recall} & \textbf{Contradiction F1} & \textbf{Entailment-refuted recall} \\
+\midrule
+B $\rightarrow$ G, shallow & \textbf{+0.094 [0.060, 0.130]} & $-0.020$ [$-0.062$, 0.020] & \textbf{+0.188 [0.023, 0.364]} & \textbf{+0.195 [0.072, 0.316]} & +0.073 [$-0.062$, 0.281] \\
+G $\rightarrow$ C, shallow & \textbf{+0.116 [0.080, 0.151]} & \textbf{+0.110 [0.064, 0.160]} & \textbf{+0.273 [0.148, 0.398]} & \textbf{+0.227 [0.099, 0.380]} & +0.333 [$-0.031$, 0.688] \\
+B $\rightarrow$ C, shallow & \textbf{+0.209 [0.182, 0.237]} & \textbf{+0.091 [0.074, 0.110]} & \textbf{+0.460 [0.278, 0.636]} & \textbf{+0.422 [0.277, 0.561]} & \textbf{+0.406 [0.167, 0.677]} \\
+G $\rightarrow$ C, deep/CWA & \textbf{+0.097 [0.070, 0.125]} & \textbf{+0.091 [0.048, 0.136]} & \textbf{+0.307 [0.182, 0.420]} & \textbf{+0.245 [0.146, 0.354]} & \textbf{+0.398 [0.057, 0.761]} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}

@@ -1,0 +1,17 @@
+\begin{table}[H]
+\caption{Structured-state comparison used to position PAT-ER. The present experiment directly controls token pooling, generic learned registers, and typed PAT-ER registers on the same backbone and data.\label{tab:structured_mechanisms}}
+\footnotesize
+\begin{tabularx}{\textwidth}{@{}p{0.22\linewidth}p{0.28\linewidth}p{0.25\linewidth}X@{}}
+\toprule
+\textbf{Mechanism} & \textbf{State representation} & \textbf{What it tests} & \textbf{Status in this paper} \\
+\midrule
+Token-pooled auxiliary heads & Last token/pooled decoder state & Whether labels alone are sufficient without side-state & Condition B \\
+Generic learned registers & Homogeneous latent register bank with comparable update machinery & Whether gains come from any learned latent memory & Condition G \\
+Typed PAT-ER registers & Event-role registers feeding primitive registers & Whether typed semantic flow helps beyond generic state & Condition C \\
+Adapters / LoRA-style adaptation & Parameter-efficient weight changes in decoder layers & Efficient tuning, not explicit semantic state & Related baseline family; not the main control \\
+External graph/RAG methods & Retrieved or symbolic structure outside the decoder & External knowledge support rather than internal side-state & Related work and future integration path \\
+Tool traces / action prompting & Textual or API-level action format & Output behavior and tool use & Decoupled interface mode \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
