@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compute mean/std/95% bootstrap CI for the B/C/D contribution matrix.
+"""Compute mean/std/95% bootstrap CI for the B/G/C/D contribution matrix.
 
 Usage:
     python3 scripts/compute_matrix_stats.py [--seeds 0-7] [--output artifacts/reports/matrix_stats.json]
@@ -49,17 +49,74 @@ def parse_log(path: Path) -> dict:
         'r2p':         float(r2p.group(1))  if r2p else None,
         'lm':          float(lm.group(1))   if lm else None,
         'ent_ref':     int(ent.group(1)) / int(ent.group(2)) if ent else None,
+        'ent_ref_precision': None,
+        'ent_ref_f1': None,
         'idk':         float(idk.group(1))  if idk else None,
         'support':     float(supp.group(1)) if supp else None,
         'verifier':    float(verif.group(1)) if verif else None,
         'proto_role':  float(proto.group(1)) if proto else None,
         'arg_role':    float(argr.group(1)) if argr else None,
         'contra_prim': contra_from(prim_sec.group() if prim_sec else None),
+        'contra_prim_precision': None,
+        'contra_prim_f1': None,
         'contra_r2p':  contra_from(r2p_sec.group()  if r2p_sec else None),
+        'contra_r2p_precision': None,
+        'contra_r2p_f1': None,
         'abduct_prim': abduct_from(prim_sec.group() if prim_sec else None),
         'syllog_prim': syllog_from(prim_sec.group() if prim_sec else None),
         'mp_prim':     mp_from(prim_sec.group()     if prim_sec else None),
     }
+
+
+def parse_json(path: Path) -> dict:
+    if not path.exists():
+        return {}
+    r = json.loads(path.read_text())
+    metrics = r.get("metrics") or {}
+
+    def mget(name: str, key: str) -> float | None:
+        v = metrics.get(name)
+        if not isinstance(v, dict):
+            return None
+        x = v.get(key)
+        return float(x) if isinstance(x, (int, float)) else None
+
+    def cls(name: str, label: str, key: str) -> float | None:
+        v = metrics.get(name)
+        if not isinstance(v, dict):
+            return None
+        pc = v.get("per_class_prf") or {}
+        row = pc.get(label) or {}
+        x = row.get(key)
+        return float(x) if isinstance(x, (int, float)) else None
+
+    return {
+        'prim': mget('primitive', 'macro_f1'),
+        'r2p': mget('role_to_primitive', 'macro_f1'),
+        'lm': float(r['lm_loss']) if isinstance(r.get('lm_loss'), (int, float)) else None,
+        'ent_ref': cls('entailment_state', 'refuted', 'recall'),
+        'ent_ref_precision': cls('entailment_state', 'refuted', 'precision'),
+        'ent_ref_f1': cls('entailment_state', 'refuted', 'f1'),
+        'idk': mget('idk', 'accuracy'),
+        'support': mget('support', 'accuracy'),
+        'verifier': mget('verifier', 'accuracy'),
+        'proto_role': mget('proto_role', 'micro_f1'),
+        'arg_role': mget('arg_role', 'micro_f1'),
+        'contra_prim': cls('primitive', 'contradiction', 'recall'),
+        'contra_prim_precision': cls('primitive', 'contradiction', 'precision'),
+        'contra_prim_f1': cls('primitive', 'contradiction', 'f1'),
+        'contra_r2p': cls('role_to_primitive', 'contradiction', 'recall'),
+        'contra_r2p_precision': cls('role_to_primitive', 'contradiction', 'precision'),
+        'contra_r2p_f1': cls('role_to_primitive', 'contradiction', 'f1'),
+        'abduct_prim': cls('primitive', 'abduction', 'recall'),
+        'syllog_prim': cls('primitive', 'syllogism', 'recall'),
+        'mp_prim': cls('primitive', 'modus_ponens', 'recall'),
+    }
+
+
+def parse_eval(report_dir: Path, tag: str, ds: str, seed: int) -> dict:
+    js = parse_json(report_dir / f'matrix_{tag}_{ds}_s{seed}.json')
+    return js if js else parse_log(report_dir / f'matrix_{tag}_{ds}_s{seed}.log')
 
 # ── stats ─────────────────────────────────────────────────────────────────────
 
@@ -108,15 +165,17 @@ def main():
     else:
         seeds = [int(s) for s in args.seeds.split(',')]
 
-    METRICS = ['prim', 'r2p', 'lm', 'ent_ref', 'idk', 'support', 'verifier',
-               'proto_role', 'arg_role', 'contra_prim', 'contra_r2p',
+    METRICS = ['prim', 'r2p', 'lm', 'ent_ref', 'ent_ref_precision', 'ent_ref_f1',
+               'idk', 'support', 'verifier', 'proto_role', 'arg_role',
+               'contra_prim', 'contra_prim_precision', 'contra_prim_f1',
+               'contra_r2p', 'contra_r2p_precision', 'contra_r2p_f1',
                'abduct_prim', 'syllog_prim', 'mp_prim']
 
     results: dict = {}
-    for tag in ['b', 'c', 'd']:
+    for tag in ['b', 'g', 'c', 'd']:
         for ds in ['shallow', 'deep']:
             key = f'{tag}_{ds}'
-            rows = [parse_log(rdir / f'matrix_{tag}_{ds}_s{s}.log') for s in seeds]
+            rows = [parse_eval(rdir, tag, ds, s) for s in seeds]
             present = sum(1 for r in rows if r)
             results[key] = {
                 'seeds_present': present,
@@ -127,7 +186,12 @@ def main():
 
     # Paired deltas B→C and C→D (matched by seed)
     for ds in ['shallow', 'deep']:
-        for delta_tag, src, dst in [('B_to_C', 'b', 'c'), ('C_to_D', 'c', 'd')]:
+        for delta_tag, src, dst in [
+            ('B_to_G', 'b', 'g'),
+            ('G_to_C', 'g', 'c'),
+            ('B_to_C', 'b', 'c'),
+            ('C_to_D', 'c', 'd'),
+        ]:
             key = f'{delta_tag}_{ds}'
             results[key] = {}
             for m in METRICS:
@@ -151,7 +215,7 @@ def main():
     header_metrics = ['prim', 'r2p', 'ent_ref', 'contra_prim', 'lm']
     print(f"{'Condition':20s}  " + '  '.join(f'{m:>20s}' for m in header_metrics))
     print('-' * (22 + 22 * len(header_metrics)))
-    for tag, label in [('b','B token-state'), ('c','C PAT-ER reg'), ('d','D Stage5B')]:
+    for tag, label in [('b','B token-state'), ('g','G generic-reg'), ('c','C PAT-ER reg'), ('d','D Stage5B')]:
         for ds in ['shallow', 'deep']:
             row = results[f'{tag}_{ds}']
             n = row['seeds_present']
@@ -159,13 +223,14 @@ def main():
             print(f"{label+' '+ds:20s}  {cells}  (n={n})")
         print()
 
-    print('\nPAIRED DELTAS (B→C, shallow OWA):')
-    bc = results['B_to_C_shallow']
-    for m in ['prim', 'r2p', 'ent_ref', 'contra_prim']:
-        s = bc[m]
-        if s.get('n', 0):
-            print(f"  {m:15s}: {s['mean']:+.3f} ± {s['std']:.3f}  "
-                  f"95%CI [{s['ci95_lo']:+.3f}, {s['ci95_hi']:+.3f}]  (n={s['n']})")
+    for dtag in ['B_to_G', 'G_to_C', 'B_to_C', 'C_to_D']:
+        print(f'\nPAIRED DELTAS ({dtag.replace("_to_", "→")}, shallow OWA):')
+        row = results[f'{dtag}_shallow']
+        for m in ['prim', 'r2p', 'ent_ref', 'contra_prim', 'contra_prim_f1']:
+            s = row[m]
+            if s.get('n', 0):
+                print(f"  {m:20s}: {s['mean']:+.3f} ± {s['std']:.3f}  "
+                      f"95%CI [{s['ci95_lo']:+.3f}, {s['ci95_hi']:+.3f}]  (n={s['n']})")
 
     # Save
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)

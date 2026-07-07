@@ -1125,6 +1125,34 @@ class MetricAccumulator:
             return {}
         return {labels[c]: (cm[c][c], sum(cm[c])) for c in range(len(cm)) if sum(cm[c]) > 0}
 
+    def per_class_prf(self, name: str, labels: Sequence[str]) -> dict[str, dict[str, float | int]]:
+        cm = self.confusion.get(name)
+        if not cm:
+            return {}
+        out: dict[str, dict[str, float | int]] = {}
+        for c in range(len(cm)):
+            support = sum(cm[c])
+            predicted = sum(cm[g][c] for g in range(len(cm)))
+            tp = cm[c][c]
+            fp = predicted - tp
+            fn = support - tp
+            if support == 0 and predicted == 0:
+                continue
+            precision = tp / (tp + fp) if (tp + fp) else 0.0
+            recall = tp / (tp + fn) if (tp + fn) else 0.0
+            f1 = 2 * precision * recall / (precision + recall) if (precision + recall) else 0.0
+            out[labels[c]] = {
+                "precision": precision,
+                "recall": recall,
+                "f1": f1,
+                "support": support,
+                "predicted": predicted,
+                "tp": tp,
+                "fp": fp,
+                "fn": fn,
+            }
+        return out
+
     def top_confusions(self, name: str, labels: Sequence[str], k: int = 5) -> list[tuple[str, str, int]]:
         cm = self.confusion.get(name)
         if not cm:
@@ -1356,6 +1384,7 @@ def train(args: argparse.Namespace) -> Path:
         if getattr(args, dest, False):
             setattr(config, attr, False)
     config.aux_from_token_state = bool(getattr(args, "aux_from_token_state", False))
+    config.generic_register_stream = bool(getattr(args, "generic_register_stream", False))
     if getattr(args, "use_reasoning_heads", False):
         config.use_reasoning_heads = True
     if getattr(args, "fact_pointer_heads", False):
@@ -1497,6 +1526,7 @@ def train(args: argparse.Namespace) -> Path:
 
     ablation = {attr: getattr(config, attr) for _, attr in ABLATION_FLAGS}
     ablation["aux_from_token_state"] = config.aux_from_token_state
+    ablation["generic_register_stream"] = config.generic_register_stream
     print("PAT-ER tiny supervised overfit (train)")
     print(f"tag={getattr(args, 'tag', '') or 'full'} render_mode={render_mode} ablation={ablation}")
     print(f"device={device} dtype={args.dtype} steps={args.steps} batch_size={args.batch_size} lr={args.lr} "
@@ -1790,6 +1820,8 @@ def build_arg_parser() -> argparse.ArgumentParser:
                         help="Input rendering: full | input_only | plain | prefix (overrides --input-only).")
     parser.add_argument("--aux-from-token-state", action="store_true",
                         help="Baseline: aux heads read pooled token state instead of side-state registers.")
+    parser.add_argument("--generic-register-stream", action="store_true",
+                        help="Control: same learned register count/modules, but a homogeneous register bank with no typed event-role->primitive flow.")
     parser.add_argument("--use-reasoning-heads", action="store_true",
                         help="Enable reasoning-supervision heads (entailment_state/proof_depth/rule_chain_length) "
                              "from ProofWriter proof metadata (aux targets only, no CoT in input).")

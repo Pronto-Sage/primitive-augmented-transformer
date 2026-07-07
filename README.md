@@ -33,6 +33,8 @@ python -m compileall -q scripts src
 
 See [`docs/reproducibility.md`](docs/reproducibility.md). External datasets are not redistributed here; use the cited upstream datasets and the conversion scripts in `scripts/`.
 
+The compact result summaries include the token-state, generic-register, typed PAT-ER, and warm-start/interface comparison matrix reported in the manuscript.
+
 Model artifacts for the usable warm-start/interface model are hosted at:
 `https://huggingface.co/nur-dev/primitive-augmented-transformer`.
 

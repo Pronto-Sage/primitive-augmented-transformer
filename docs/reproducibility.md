@@ -63,6 +63,15 @@ bash scripts/run_ws_pipeline_cd_full.sh <seed> <gpu>
 python scripts/compute_matrix_stats.py --seeds 0-7
 ```
 
+The structured-state control matrix reported in the manuscript compares token-pooled heads, generic learned registers, typed PAT-ER registers, and the warm-start usable model:
+
+```bash
+bash scripts/run_reviewer_matrix.sh
+python scripts/compute_matrix_stats.py --seeds 0-7
+python scripts/report_contradiction_prf.py --seeds 0-7
+python scripts/audit_label_reliability.py
+```
+
 ## Interface Evaluation
 
 ```bash

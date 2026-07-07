@@ -214,9 +214,23 @@ def evaluate(args: argparse.Namespace) -> dict:
     tok_desc = str(getattr(args, "tokenizer", None) or checkpoint.get("tokenizer_path") or "reference")
     print(f"device={device} dtype={args.dtype} split={args.split} records={len(records)} "
           f"trained_steps={checkpoint.get('step')} render_mode={render_mode} tokenizer={tok_desc} "
-          f"aux_from_token_state={config.aux_from_token_state}")
+          f"aux_from_token_state={config.aux_from_token_state} "
+          f"generic_register_stream={getattr(config, 'generic_register_stream', False)}")
     print(f"LM loss: {acc.lm_loss():.4f}")
-    report: dict = {"split": args.split, "records": len(records), "lm_loss": acc.lm_loss(), "metrics": {}}
+    report: dict = {
+        "split": args.split,
+        "records": len(records),
+        "lm_loss": acc.lm_loss(),
+        "condition_flags": {
+            "aux_from_token_state": bool(config.aux_from_token_state),
+            "generic_register_stream": bool(getattr(config, "generic_register_stream", False)),
+            "use_event_stream": bool(config.use_event_stream),
+            "use_primitive_stream": bool(config.use_primitive_stream),
+            "use_role_primitive_ffn": bool(config.use_role_primitive_ffn),
+            "use_vocab_pressure": bool(config.use_vocab_pressure),
+        },
+        "metrics": {},
+    }
 
     print("categorical heads (acc | random | majority):")
     for name in CATEGORICAL_HEADS:
@@ -241,9 +255,17 @@ def evaluate(args: argparse.Namespace) -> dict:
         entry = {"accuracy": a, "n": acc.total[name]}
         if name == "entailment_state":
             pcr = acc.per_class_recall(name, list(T.ENTAILMENT_STATES))
+            pprf = acc.per_class_prf(name, list(T.ENTAILMENT_STATES))
             entry["per_class_recall"] = {k: f"{c}/{t}" for k, (c, t) in pcr.items()}
+            entry["per_class_prf"] = pprf
         report["metrics"][name] = entry
-        print(f"  {name:<18} acc={a:.3f}  n={acc.total[name]}" + (f"  per_class={entry.get('per_class_recall')}" if name == 'entailment_state' else ""))
+        msg = f"  {name:<18} acc={a:.3f}  n={acc.total[name]}"
+        if name == "entailment_state":
+            ref = entry.get("per_class_prf", {}).get("refuted")
+            if ref:
+                msg += f"  refuted P={ref['precision']:.3f} R={ref['recall']:.3f} F1={ref['f1']:.3f}"
+            msg += f"  per_class={entry.get('per_class_recall')}"
+        print(msg)
     for name in ("supporting_fact", "contradicting_fact", "supporting_item", "contradicting_item"):
         f1 = acc.micro_f1(name)
         if f1 is not None:
@@ -260,13 +282,20 @@ def evaluate(args: argparse.Namespace) -> dict:
             report["metrics"].setdefault(name, {})
             continue
         per_class = acc.per_class_recall(name, T.builder.PRIMITIVE_CLASSES)
+        per_class_prf = acc.per_class_prf(name, T.builder.PRIMITIVE_CLASSES)
         confs = acc.top_confusions(name, T.builder.PRIMITIVE_CLASSES, k=4)
         report["metrics"].setdefault(name, {})
         report["metrics"][name].update({"macro_f1": mf1, "accuracy": a,
+                                        "per_class_prf": per_class_prf,
                                         "per_class_recall": {k: f"{c}/{t}" for k, (c, t) in per_class.items()},
                                         "top_confusions": [f"{g}->{p}:{n}" for g, p, n in confs]})
         worst = sorted(per_class.items(), key=lambda kv: kv[1][0] / max(1, kv[1][1]))[:4]
         print(f"  {name:<18} macroF1={mf1:.3f}  acc={a:.3f}")
+        contra = per_class_prf.get("contradiction")
+        if contra:
+            print("      contradiction: "
+                  f"P={contra['precision']:.3f} R={contra['recall']:.3f} F1={contra['f1']:.3f} "
+                  f"support={contra['support']} predicted={contra['predicted']}")
         print(f"      worst classes: " + ", ".join(f"{k} {c}/{t}" for k, (c, t) in worst))
         print(f"      top confusions: " + (", ".join(f"{g}->{p}({n})" for g, p, n in confs) or "none"))
 

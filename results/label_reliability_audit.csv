@@ -1,0 +1,3 @@
+source,n,primitive_vocab,support_vocab,event_primitive_consistency,event_local_exemptions,no_cot_leak,provenance,arg_span_located,predicate_located,evidence_located,notes
+external,60,1.000,1.000,1.000,0,1.000,1.000,0.920,0.000,1.000,"Predicate relocation is diagnostic only; predicates are often lemma-level or abstract labels in input-only rendering."
+synthetic,60,1.000,1.000,1.000,14,1.000,1.000,1.000,0.450,1.000,"Event-local exemptions are interface/meta records where primitive_class is tool, schema, or provenance."

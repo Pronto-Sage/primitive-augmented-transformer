@@ -130,6 +130,64 @@ class PATERBlock(nn.Module):
     ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         x = hidden_states + self.self_attn(self.input_norm(hidden_states), attention_mask=attention_mask)
 
+        if self.use_cross_stream and self.config.generic_register_stream:
+            # Generic-register control: same register tensors and same
+            # cross-attention/fuse modules as PAT-ER, but no typed
+            # event-role -> primitive flow. All registers are updated as one
+            # homogeneous memory bank and split only so the existing aux-head
+            # readout shapes remain comparable.
+            split = event_registers.shape[1]
+            generic_registers = torch.cat([event_registers, primitive_registers], dim=1)
+
+            if self.config.use_event_stream:
+                assert self.event_norm is not None
+                assert self.event_read is not None
+                assert self.role_inject_norm is not None
+                assert self.role_token_read is not None
+                assert self.role_fuse is not None
+                generic_update = self.event_read(
+                    query=self.event_norm(generic_registers),
+                    context=x,
+                    context_mask=attention_mask,
+                )
+                generic_registers = generic_registers + generic_update
+                z_generic = self.role_token_read(
+                    query=self.role_inject_norm(x),
+                    context=generic_registers,
+                    context_mask=None,
+                )
+                if self.config.injection_fusion_mode == "register_only":
+                    x = x + self.role_fuse(z_generic.detach())
+                else:
+                    x = x + self.role_fuse(torch.cat([x, z_generic, x * z_generic], dim=-1))
+
+            if self.config.use_primitive_stream:
+                assert self.primitive_norm is not None
+                assert self.primitive_read is not None
+                assert self.primitive_inject_norm is not None
+                assert self.primitive_token_read is not None
+                assert self.primitive_fuse is not None
+                generic_update = self.primitive_read(
+                    query=self.primitive_norm(generic_registers),
+                    context=x,
+                    context_mask=attention_mask,
+                )
+                generic_registers = generic_registers + generic_update
+                z_generic = self.primitive_token_read(
+                    query=self.primitive_inject_norm(x),
+                    context=generic_registers,
+                    context_mask=None,
+                )
+                if self.config.injection_fusion_mode == "register_only":
+                    x = x + self.primitive_fuse(z_generic.detach())
+                else:
+                    x = x + self.primitive_fuse(torch.cat([x, z_generic, x * z_generic], dim=-1))
+
+            event_registers = generic_registers[:, :split, :]
+            primitive_registers = generic_registers[:, split:, :]
+            x = x + self.ffn(self.ffn_norm(x), event_registers, primitive_registers)
+            return x, event_registers, primitive_registers
+
         if self.use_cross_stream and self.config.use_event_stream:
             assert self.event_norm is not None
             assert self.event_read is not None

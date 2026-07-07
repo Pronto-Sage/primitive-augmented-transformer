@@ -34,6 +34,13 @@ class PATERConfig:
     use_event_stream: bool = True
     use_primitive_stream: bool = True
     use_role_primitive_ffn: bool = True
+    # Reviewer-control baseline: keep the same learned register count and the
+    # same cross-attention/fuse modules, but update all registers as one
+    # homogeneous latent bank. The bank is split only for existing aux-head
+    # shapes. This tests "generic learned memory/registers" against the typed
+    # PAT-ER event-role -> primitive flow. Default off => existing configs are
+    # byte-identical.
+    generic_register_stream: bool = False
     num_ffn_adapters: int = 6
     pressure_rank: int = 0
     use_vocab_pressure: bool = True
